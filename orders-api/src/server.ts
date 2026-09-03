@@ -4,7 +4,8 @@ import { createApp } from './app';
 
 const container = buildContainer();
 const app = createApp(container);
+const { logger } = container.cradle;
 
 app.listen(config.port, () => {
-  console.log(`Orders summary backend listening on port ${config.port} (DB_PROVIDER=${config.dbProvider})`);
+  logger.info(`Orders summary backend listening on port ${config.port} (DB_PROVIDER=${config.dbProvider})`);
 });

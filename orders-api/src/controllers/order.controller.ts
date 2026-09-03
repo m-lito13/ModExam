@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import { OrderService } from '../services/order.service';
+import { IOrderService } from '../services/order-service.interface';
 import { createOrderSchema } from '../validation/order.schema';
 
 interface OrderControllerDeps {
-  orderService: OrderService;
+  orderService: IOrderService;
 }
 
 export class OrderController {
-  private readonly orderService: OrderService;
+  private readonly orderService: IOrderService;
 
   constructor({ orderService }: OrderControllerDeps) {
     this.orderService = orderService;

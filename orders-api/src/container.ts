@@ -2,12 +2,16 @@ import { createContainer, asClass, AwilixContainer } from 'awilix';
 import { config } from './config/env';
 import { IOrderRepository } from './repositories/order-repository.interface';
 import { InMemoryOrderRepository } from './repositories/in-memory-order.repository';
+import { IOrderService } from './services/order-service.interface';
 import { OrderService } from './services/order.service';
 import { OrderController } from './controllers/order.controller';
+import { ILogger } from './logging/logger.interface';
+import { PinoLogger } from './logging/pino-logger';
 
 export interface Cradle {
+  logger: ILogger;
   orderRepository: IOrderRepository;
-  orderService: OrderService;
+  orderService: IOrderService;
   orderController: OrderController;
 }
 
@@ -29,6 +33,7 @@ export function buildContainer(): AwilixContainer<Cradle> {
   }
 
   container.register({
+    logger: asClass(PinoLogger).singleton(),
     orderRepository: asClass(InMemoryOrderRepository).singleton(),
     orderService: asClass(OrderService).singleton(),
     orderController: asClass(OrderController).singleton(),

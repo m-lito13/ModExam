@@ -1,13 +1,16 @@
 import express, { Express } from 'express';
 import cors from 'cors';
+import pinoHttp from 'pino-http';
 import { AwilixContainer } from 'awilix';
 import { Cradle } from './container';
 import { createOrderRouter } from './routes/order.routes';
 import { notFoundHandler, errorHandler } from './middleware/error-handler';
+import { pinoInstance } from './logging/pino-instance';
 
 export function createApp(container: AwilixContainer<Cradle>): Express {
   const app = express();
 
+  app.use(pinoHttp({ logger: pinoInstance }));
   app.use(cors());
   app.use(express.json());
 
