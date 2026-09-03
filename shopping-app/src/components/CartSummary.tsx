@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
   removeFromCart,
   selectCartItems,
@@ -6,10 +6,14 @@ import {
   updateCartQuantity,
 } from '../features/cart/cartSlice';
 
-export default function CartSummary({ onCheckout }) {
-  const dispatch = useDispatch();
-  const items = useSelector(selectCartItems);
-  const total = useSelector(selectCartTotal);
+interface CartSummaryProps {
+  onCheckout: () => void;
+}
+
+export default function CartSummary({ onCheckout }: CartSummaryProps) {
+  const dispatch = useAppDispatch();
+  const items = useAppSelector(selectCartItems);
+  const total = useAppSelector(selectCartTotal);
 
   return (
     <aside className="cart-panel">

@@ -1,6 +1,12 @@
 import { useState } from 'react';
+import type { Product } from '../types';
 
-export default function ProductCard({ product, onAdd }) {
+interface ProductCardProps {
+  product: Product;
+  onAdd: (product: Product, quantity: number) => void;
+}
+
+export default function ProductCard({ product, onAdd }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
 
   const handleAdd = () => {

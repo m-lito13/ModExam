@@ -1,9 +1,9 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectLastOrder, startNewOrder } from '../features/ui/uiSlice';
 
 export default function ConfirmationScreen() {
-  const dispatch = useDispatch();
-  const order = useSelector(selectLastOrder);
+  const dispatch = useAppDispatch();
+  const order = useAppSelector(selectLastOrder);
 
   if (!order) return null;
 

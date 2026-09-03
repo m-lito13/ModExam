@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import type { Customer } from '../types';
 
-const initialForm = { firstName: '', lastName: '', address: '', email: '' };
+const initialForm: Customer = { firstName: '', lastName: '', address: '', email: '' };
 
-function validate(form) {
-  const errors = {};
+type FormErrors = Partial<Record<keyof Customer, string>>;
+
+function validate(form: Customer): FormErrors {
+  const errors: FormErrors = {};
   if (!form.firstName.trim()) errors.firstName = 'שדה חובה';
   if (!form.lastName.trim()) errors.lastName = 'שדה חובה';
   if (!form.address.trim()) errors.address = 'שדה חובה';
@@ -15,15 +18,21 @@ function validate(form) {
   return errors;
 }
 
-export default function OrderForm({ onSubmit, submitting, submitError }) {
-  const [form, setForm] = useState(initialForm);
-  const [errors, setErrors] = useState({});
+interface OrderFormProps {
+  onSubmit: (form: Customer) => void;
+  submitting: boolean;
+  submitError: string | null;
+}
 
-  const handleChange = (field) => (event) => {
+export default function OrderForm({ onSubmit, submitting, submitError }: OrderFormProps) {
+  const [form, setForm] = useState<Customer>(initialForm);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const handleChange = (field: keyof Customer) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const validationErrors = validate(form);
     setErrors(validationErrors);

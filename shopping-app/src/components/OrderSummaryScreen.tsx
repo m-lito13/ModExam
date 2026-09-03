@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { clearCart, selectCartItems, selectCartTotal } from '../features/cart/cartSlice';
 import { goToScreen, setLastOrder } from '../features/ui/uiSlice';
 import { submitOrder } from '../api/ordersApi';
 import OrderForm from './OrderForm';
+import type { Customer } from '../types';
 
 export default function OrderSummaryScreen() {
-  const dispatch = useDispatch();
-  const items = useSelector(selectCartItems);
-  const total = useSelector(selectCartTotal);
+  const dispatch = useAppDispatch();
+  const items = useAppSelector(selectCartItems);
+  const total = useAppSelector(selectCartTotal);
   const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = async (customer) => {
+  const handleSubmit = async (customer: Customer) => {
     setSubmitting(true);
     setSubmitError(null);
     try {
@@ -29,7 +30,7 @@ export default function OrderSummaryScreen() {
       dispatch(setLastOrder({ ...result, customer, items, total }));
       dispatch(clearCart());
     } catch (err) {
-      setSubmitError(err.message);
+      setSubmitError(err instanceof Error ? err.message : String(err));
     } finally {
       setSubmitting(false);
     }

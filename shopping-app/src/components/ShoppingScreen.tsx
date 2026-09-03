@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
   loadCategories,
   selectCatalogError,
@@ -11,13 +11,14 @@ import { goToScreen } from '../features/ui/uiSlice';
 import CategorySelector from './CategorySelector';
 import ProductList from './ProductList';
 import CartSummary from './CartSummary';
+import type { Product } from '../types';
 
 export default function ShoppingScreen() {
-  const dispatch = useDispatch();
-  const categories = useSelector(selectCategories);
-  const status = useSelector(selectCatalogStatus);
-  const error = useSelector(selectCatalogError);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const dispatch = useAppDispatch();
+  const categories = useAppSelector(selectCategories);
+  const status = useAppSelector(selectCatalogStatus);
+  const error = useAppSelector(selectCatalogError);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -33,7 +34,7 @@ export default function ShoppingScreen() {
 
   const selectedCategory = categories.find((c) => c.id === selectedCategoryId);
 
-  const handleAdd = (product, quantity) => {
+  const handleAdd = (product: Product, quantity: number) => {
     dispatch(addToCart({ product, categoryId: selectedCategoryId, quantity }));
   };
 

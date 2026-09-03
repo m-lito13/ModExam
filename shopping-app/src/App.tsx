@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useAppSelector } from './app/hooks';
 import { selectScreen } from './features/ui/uiSlice';
 import Header from './components/Header';
 import ShoppingScreen from './components/ShoppingScreen';
@@ -6,7 +6,7 @@ import OrderSummaryScreen from './components/OrderSummaryScreen';
 import ConfirmationScreen from './components/ConfirmationScreen';
 
 export default function App() {
-  const screen = useSelector(selectScreen);
+  const screen = useAppSelector(selectScreen);
 
   return (
     <div className="app-shell">

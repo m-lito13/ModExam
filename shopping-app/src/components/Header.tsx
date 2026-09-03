@@ -1,4 +1,10 @@
-export default function Header({ step }) {
+import type { Screen } from '../types';
+
+interface HeaderProps {
+  step: Screen;
+}
+
+export default function Header({ step }: HeaderProps) {
   return (
     <header className="app-header">
       <div className="app-header__brand">
@@ -6,7 +12,7 @@ export default function Header({ step }) {
         <span className="app-header__title">ירוקת</span>
       </div>
       <ol className="app-header__steps">
-        <li className={step === 'shopping' ? 'is-active' : step !== 'shopping' ? 'is-done' : ''}>
+        <li className={step === 'shopping' ? 'is-active' : 'is-done'}>
           רשימת קניות
         </li>
         <li className={step === 'summary' ? 'is-active' : step === 'confirmation' ? 'is-done' : ''}>

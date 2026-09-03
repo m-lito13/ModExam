@@ -5,9 +5,11 @@
 // backend is deployed — the shape returned below already matches the
 // contract, so no other code needs to change.
 
+import type { Category } from '../types';
+
 const MOCK_DELAY_MS = 450;
 
-const mockCategories = [
+const mockCategories: Category[] = [
   {
     id: 1,
     name: 'חלב ומוצריו',
@@ -48,11 +50,11 @@ const mockCategories = [
   },
 ];
 
-function delay(ms) {
+function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function fetchCategories() {
+export async function fetchCategories(): Promise<Category[]> {
   await delay(MOCK_DELAY_MS);
   return JSON.parse(JSON.stringify(mockCategories));
 }

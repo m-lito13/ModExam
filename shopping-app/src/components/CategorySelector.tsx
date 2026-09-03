@@ -1,4 +1,12 @@
-export default function CategorySelector({ categories, selectedId, onSelect }) {
+import type { Category } from '../types';
+
+interface CategorySelectorProps {
+  categories: Category[];
+  selectedId: number | null;
+  onSelect: (id: number) => void;
+}
+
+export default function CategorySelector({ categories, selectedId, onSelect }: CategorySelectorProps) {
   return (
     <div className="category-selector">
       <label className="field-label" htmlFor="category-select">

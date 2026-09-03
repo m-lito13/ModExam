@@ -1,13 +1,24 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '../../app/store';
+import type { CartItem, Product } from '../../types';
+
+interface CartState {
+  // items keyed by productId for O(1) lookups & easy quantity updates
+  items: Record<number, CartItem>;
+}
+
+const initialState: CartState = {
+  items: {},
+};
 
 const cartSlice = createSlice({
   name: 'cart',
-  initialState: {
-    // items keyed by productId for O(1) lookups & easy quantity updates
-    items: {},
-  },
+  initialState,
   reducers: {
-    addToCart: (state, action) => {
+    addToCart: (
+      state,
+      action: PayloadAction<{ product: Product; categoryId: number | null; quantity: number }>
+    ) => {
       const { product, categoryId, quantity } = action.payload;
       const existing = state.items[product.id];
       if (existing) {
@@ -23,10 +34,13 @@ const cartSlice = createSlice({
         };
       }
     },
-    removeFromCart: (state, action) => {
+    removeFromCart: (state, action: PayloadAction<{ productId: number }>) => {
       delete state.items[action.payload.productId];
     },
-    updateCartQuantity: (state, action) => {
+    updateCartQuantity: (
+      state,
+      action: PayloadAction<{ productId: number; quantity: number }>
+    ) => {
       const { productId, quantity } = action.payload;
       if (state.items[productId]) {
         if (quantity <= 0) {
@@ -47,10 +61,10 @@ export const { addToCart, removeFromCart, updateCartQuantity, clearCart } =
 
 export default cartSlice.reducer;
 
-export const selectCartItems = (state) => Object.values(state.cart.items);
-export const selectCartCount = (state) =>
+export const selectCartItems = (state: RootState) => Object.values(state.cart.items);
+export const selectCartCount = (state: RootState) =>
   Object.values(state.cart.items).reduce((sum, item) => sum + item.quantity, 0);
-export const selectCartTotal = (state) =>
+export const selectCartTotal = (state: RootState) =>
   Object.values(state.cart.items).reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
