@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { clearCart, selectCartItems, selectCartTotal } from '../features/cart/cartSlice';
 import { selectCategories } from '../features/catalog/catalogSlice';
@@ -15,6 +15,14 @@ export default function OrderSummaryScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  // Generated once per visit to this screen (a fresh order) and reused across
+  // retries of the same submission, so a duplicate request dedupes server-side.
+  const idempotencyKeyRef = useRef<string | null>(null);
+  if (idempotencyKeyRef.current === null) {
+    idempotencyKeyRef.current = crypto.randomUUID();
+  }
+  const idempotencyKey = idempotencyKeyRef.current;
+
   const handleSubmit = async (customer: Customer) => {
     setSubmitting(true);
     setSubmitError(null);
@@ -27,7 +35,7 @@ export default function OrderSummaryScreen() {
           quantity: item.quantity,
         })),
       };
-      const result = await submitOrder(payload);
+      const result = await submitOrder(payload, idempotencyKey);
       dispatch(setLastOrder({ ...result, customer, items, total }));
       dispatch(clearCart());
     } catch (err) {

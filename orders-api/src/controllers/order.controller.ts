@@ -24,7 +24,8 @@ export class OrderController {
         });
       }
 
-      const order = await this.orderService.submitOrder(parseResult.data);
+      const idempotencyKey = req.get('Idempotency-Key')?.trim() || undefined;
+      const order = await this.orderService.submitOrder(parseResult.data, idempotencyKey);
       return res.status(201).json(order);
     } catch (err) {
       return next(err);

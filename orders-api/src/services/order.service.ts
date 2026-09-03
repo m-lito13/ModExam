@@ -22,8 +22,8 @@ export class OrderService implements IOrderService {
     this.logger = logger;
   }
 
-  async submitOrder(input: CreateOrderInput): Promise<Order> {
-    const order = await this.orderRepository.create(input);
+  async submitOrder(input: CreateOrderInput, idempotencyKey?: string): Promise<Order> {
+    const order = await this.orderRepository.create(input, idempotencyKey);
     this.logger.info('Order submitted', { orderId: order.id });
     return order;
   }

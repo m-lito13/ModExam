@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IOrderRepository } from './order-repository.interface';
 import { Order, CreateOrderInput } from '../models/order.model';
+import { isSameOrderContent } from '../models/order-equality';
+import { IdempotencyConflictError } from '../errors/idempotency-conflict.error';
 
 /**
  * Mock/in-memory implementation of IOrderRepository, used while the real
@@ -11,9 +13,19 @@ import { Order, CreateOrderInput } from '../models/order.model';
 export class InMemoryOrderRepository implements IOrderRepository {
   private readonly orders = new Map<string, Order>();
 
-  async create(input: CreateOrderInput): Promise<Order> {
+  async create(input: CreateOrderInput, idempotencyKey?: string): Promise<Order> {
+    const id = idempotencyKey ?? uuidv4();
+
+    const existing = this.orders.get(id);
+    if (existing) {
+      if (idempotencyKey && !isSameOrderContent(existing, input)) {
+        throw new IdempotencyConflictError(idempotencyKey);
+      }
+      return existing;
+    }
+
     const order: Order = {
-      id: uuidv4(),
+      id,
       createdAt: new Date().toISOString(),
       ...input,
     };

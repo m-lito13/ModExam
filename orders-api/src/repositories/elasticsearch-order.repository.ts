@@ -2,6 +2,8 @@ import { Client } from '@elastic/elasticsearch';
 import { v4 as uuidv4 } from 'uuid';
 import { IOrderRepository } from './order-repository.interface';
 import { Order, CreateOrderInput } from '../models/order.model';
+import { isSameOrderContent } from '../models/order-equality';
+import { IdempotencyConflictError } from '../errors/idempotency-conflict.error';
 import { ILogger } from '../logging/logger.interface';
 import { config } from '../config/env';
 
@@ -26,19 +28,36 @@ export class ElasticsearchOrderRepository implements IOrderRepository {
     this.index = config.elasticsearch.ordersIndex;
   }
 
-  async create(input: CreateOrderInput): Promise<Order> {
+  async create(input: CreateOrderInput, idempotencyKey?: string): Promise<Order> {
     const order: Order = {
-      id: uuidv4(),
+      id: idempotencyKey ?? uuidv4(),
       createdAt: new Date().toISOString(),
       ...input,
     };
 
-    await this.client.index({
-      index: this.index,
-      id: order.id,
-      document: order,
-      refresh: 'wait_for',
-    });
+    try {
+      await this.client.index({
+        index: this.index,
+        id: order.id,
+        document: order,
+        op_type: 'create',
+        refresh: 'wait_for',
+      });
+    } catch (err: any) {
+      if (idempotencyKey && err?.meta?.statusCode === 409) {
+        const existing = await this.findById(order.id);
+        if (existing) {
+          if (!isSameOrderContent(existing, input)) {
+            throw new IdempotencyConflictError(idempotencyKey);
+          }
+          this.logger.info('Duplicate order submission detected, returning existing order', {
+            id: order.id,
+          });
+          return existing;
+        }
+      }
+      throw err;
+    }
 
     this.logger.debug('order indexed', { id: order.id });
     return order;

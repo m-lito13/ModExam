@@ -9,7 +9,12 @@ import { Order, CreateOrderInput } from '../models/order.model';
  * the DI container.
  */
 export interface IOrderRepository {
-  create(input: CreateOrderInput): Promise<Order>;
+  /**
+   * When idempotencyKey is provided, it is used as the order id so that a
+   * retried request with the same key returns the original order instead
+   * of creating a duplicate.
+   */
+  create(input: CreateOrderInput, idempotencyKey?: string): Promise<Order>;
   findById(id: string): Promise<Order | null>;
   findAll(): Promise<Order[]>;
 }

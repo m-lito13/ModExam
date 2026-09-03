@@ -1,8 +1,10 @@
 // API client for backend 2 (Node.js + MongoDB/Elasticsearch).
 // POST /api/orders
+//   headers -> Idempotency-Key: <uuid>  (lets a retried request return the original order instead of creating a duplicate)
 //   body -> { fullName, address, email, products: [{ category, productName, quantity }] }
 //   response (201) -> { id, fullName, address, email, products, createdAt }
 //   response (400) -> { error: 'ValidationError', details: Record<string, string[]> }
+//   response (409) -> { error: 'IdempotencyConflictError', message } (key reused with different order details)
 
 import type { Customer, OrderResult } from '../types';
 
@@ -27,10 +29,13 @@ interface ValidationErrorDto {
   message?: string;
 }
 
-export async function submitOrder(orderPayload: OrderPayload): Promise<OrderResult> {
+export async function submitOrder(orderPayload: OrderPayload, idempotencyKey: string): Promise<OrderResult> {
   const response = await fetch(`${BASE_URL}/api/orders`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Idempotency-Key': idempotencyKey,
+    },
     body: JSON.stringify(orderPayload),
   });
 

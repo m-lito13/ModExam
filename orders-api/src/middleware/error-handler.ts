@@ -5,7 +5,11 @@ export function notFoundHandler(req: Request, res: Response) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+export function errorHandler(err: Error & { statusCode?: number }, req: Request, res: Response, next: NextFunction) {
   req.log.error(err);
-  res.status(500).json({ error: 'InternalServerError', message: err.message });
+  const statusCode = err.statusCode ?? 500;
+  res.status(statusCode).json({
+    error: statusCode === 500 ? 'InternalServerError' : err.name,
+    message: err.message,
+  });
 }
