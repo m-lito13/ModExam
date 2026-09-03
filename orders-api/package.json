@@ -10,6 +10,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^8.19.2",
     "awilix": "^10.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
