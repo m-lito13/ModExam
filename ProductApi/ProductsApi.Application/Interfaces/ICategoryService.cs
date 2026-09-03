@@ -1,10 +1,11 @@
 using ProductsApi.Application.Dtos;
+using ProductsApi.Domain.Common;
 
 namespace ProductsApi.Application.Interfaces;
 
 public interface ICategoryService
 {
-    Task<IEnumerable<CategoryDto>> GetCategoriesAsync();
+    Task<PagedResult<CategoryDto>> GetCategoriesAsync(int pageNumber, int pageSize);
     Task<CategoryDto?> GetCategoryByIdAsync(int id);
-    Task<IEnumerable<ProductDto>?> GetProductsByCategoryAsync(int id);
+    Task<PagedResult<ProductDto>?> GetProductsByCategoryAsync(int id, int pageNumber, int pageSize);
 }
