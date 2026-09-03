@@ -11,7 +11,7 @@ import { goToScreen } from '../features/ui/uiSlice';
 import CategorySelector from './CategorySelector';
 import ProductList from './ProductList';
 import CartSummary from './CartSummary';
-import type { Product } from '../types';
+import { SCREEN, type Product } from '../types';
 
 export default function ShoppingScreen() {
   const dispatch = useAppDispatch();
@@ -59,7 +59,7 @@ export default function ShoppingScreen() {
         )}
       </section>
 
-      <CartSummary onCheckout={() => dispatch(goToScreen('summary'))} />
+      <CartSummary onCheckout={() => dispatch(goToScreen(SCREEN.SUMMARY))} />
     </div>
   );
 }

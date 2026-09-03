@@ -19,8 +19,7 @@ export interface CartItem {
 }
 
 export interface Customer {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   address: string;
   email: string;
 }
@@ -37,4 +36,10 @@ export interface LastOrder extends OrderResult {
   total: number;
 }
 
-export type Screen = 'shopping' | 'summary' | 'confirmation';
+export const SCREEN = {
+  SHOPPING: 'shopping',
+  SUMMARY: 'summary',
+  CONFIRMATION: 'confirmation',
+} as const;
+
+export type Screen = (typeof SCREEN)[keyof typeof SCREEN];

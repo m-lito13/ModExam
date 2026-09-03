@@ -1,47 +1,52 @@
 // API client for backend 2 (Node.js + MongoDB/Elasticsearch).
-// Real endpoint contract: POST /api/orders
-//   body -> { firstName, lastName, address, email, items: [{ productId, productName, categoryId, quantity }] }
-//   response -> { orderId, status, createdAt }
-// Swap the body of submitOrder for a real fetch() call once the backend
-// is deployed; the request/response shapes below already match the contract.
+// POST /api/orders
+//   body -> { fullName, address, email, products: [{ category, productName, quantity }] }
+//   response (201) -> { id, fullName, address, email, products, createdAt }
+//   response (400) -> { error: 'ValidationError', details: Record<string, string[]> }
 
 import type { Customer, OrderResult } from '../types';
 
-const MOCK_DELAY_MS = 600;
+const BASE_URL = import.meta.env.VITE_ORDER_API_URL;
 
 export interface OrderPayload extends Customer {
-  items: Array<{
-    productId: number;
+  products: Array<{
+    category: string;
     productName: string;
-    categoryId: number | null;
     quantity: number;
   }>;
 }
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+interface OrderDto {
+  id: string;
+  createdAt: string;
 }
 
-function generateOrderId(): string {
-  return 'ord_' + Math.random().toString(36).slice(2, 10);
+interface ValidationErrorDto {
+  error: string;
+  details?: Record<string, string[]>;
+  message?: string;
 }
 
 export async function submitOrder(orderPayload: OrderPayload): Promise<OrderResult> {
-  await delay(MOCK_DELAY_MS);
+  const response = await fetch(`${BASE_URL}/api/orders`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(orderPayload),
+  });
 
-  // Simulated server-side validation, mirroring what backend 2 should enforce.
-  const required: Array<keyof Customer> = ['firstName', 'lastName', 'address', 'email'];
-  const missing = required.filter((field) => !orderPayload[field]?.trim());
-  if (missing.length > 0) {
-    throw new Error(`שדות חובה חסרים: ${missing.join(', ')}`);
+  if (!response.ok) {
+    const errorBody: ValidationErrorDto = await response.json().catch(() => ({ error: 'UnknownError' }));
+    const message = errorBody.details
+      ? Object.values(errorBody.details).flat().join(', ')
+      : errorBody.message ?? `שגיאה בשליחת ההזמנה (${response.status})`;
+    throw new Error(message);
   }
-  if (!orderPayload.items || orderPayload.items.length === 0) {
-    throw new Error('לא ניתן לשלוח הזמנה ריקה');
-  }
+
+  const order: OrderDto = await response.json();
 
   return {
-    orderId: generateOrderId(),
+    orderId: order.id,
     status: 'created',
-    createdAt: new Date().toISOString(),
+    createdAt: order.createdAt,
   };
 }

@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
-import type { LastOrder, Screen } from '../../types';
+import { SCREEN, type LastOrder, type Screen } from '../../types';
 
 interface UiState {
   screen: Screen;
@@ -8,7 +8,7 @@ interface UiState {
 }
 
 const initialState: UiState = {
-  screen: 'shopping',
+  screen: SCREEN.SHOPPING,
   lastOrder: null,
 };
 
@@ -21,11 +21,11 @@ const uiSlice = createSlice({
     },
     setLastOrder: (state, action: PayloadAction<LastOrder>) => {
       state.lastOrder = action.payload;
-      state.screen = 'confirmation';
+      state.screen = SCREEN.CONFIRMATION;
     },
     startNewOrder: (state) => {
       state.lastOrder = null;
-      state.screen = 'shopping';
+      state.screen = SCREEN.SHOPPING;
     },
   },
 });

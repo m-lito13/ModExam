@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { clearCart, selectCartItems, selectCartTotal } from '../features/cart/cartSlice';
+import { selectCategories } from '../features/catalog/catalogSlice';
 import { goToScreen, setLastOrder } from '../features/ui/uiSlice';
 import { submitOrder } from '../api/ordersApi';
 import OrderForm from './OrderForm';
-import type { Customer } from '../types';
+import { SCREEN, type Customer } from '../types';
 
 export default function OrderSummaryScreen() {
   const dispatch = useAppDispatch();
   const items = useAppSelector(selectCartItems);
   const total = useAppSelector(selectCartTotal);
+  const categories = useAppSelector(selectCategories);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -19,10 +21,9 @@ export default function OrderSummaryScreen() {
     try {
       const payload = {
         ...customer,
-        items: items.map((item) => ({
-          productId: item.productId,
+        products: items.map((item) => ({
+          category: categories.find((c) => c.id === item.categoryId)?.name ?? '',
           productName: item.name,
-          categoryId: item.categoryId,
           quantity: item.quantity,
         })),
       };
@@ -39,7 +40,7 @@ export default function OrderSummaryScreen() {
   return (
     <div className="screen screen--summary">
       <section className="summary-panel">
-        <button type="button" className="link-btn" onClick={() => dispatch(goToScreen('shopping'))}>
+        <button type="button" className="link-btn" onClick={() => dispatch(goToScreen(SCREEN.SHOPPING))}>
           → חזרה לרשימת הקניות
         </button>
         <h1 className="screen-title">סיכום הזמנה</h1>
