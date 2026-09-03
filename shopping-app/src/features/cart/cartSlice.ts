@@ -29,7 +29,6 @@ const cartSlice = createSlice({
           categoryId,
           name: product.name,
           price: product.price,
-          unit: product.unit,
           quantity,
         };
       }

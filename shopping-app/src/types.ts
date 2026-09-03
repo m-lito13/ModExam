@@ -2,7 +2,6 @@ export interface Product {
   id: number;
   name: string;
   price: number;
-  unit: string;
 }
 
 export interface Category {
@@ -16,7 +15,6 @@ export interface CartItem {
   categoryId: number | null;
   name: string;
   price: number;
-  unit: string;
   quantity: number;
 }
 

@@ -1,60 +1,68 @@
 // API client for backend 1 (.NET 10 + SQL Server).
-// Real endpoint contract: GET /api/categories
-//   -> [{ id, name, products: [{ id, name, price, unit }] }]
-// Swap MOCK_DELAY_MS / mockCategories for a real fetch call once the
-// backend is deployed — the shape returned below already matches the
-// contract, so no other code needs to change.
+// GET /api/categories?pageNumber=&pageSize=      -> PagedResult<{ id, name }>
+// GET /api/categories/{id}/products?pageNumber=&pageSize= -> PagedResult<{ id, name, price, categoryId }>
+// Categories and their products are paginated separately by the backend, so
+// fetchCategories() pulls every page of categories, then every page of each
+// category's products, and assembles the nested Category[] shape the app uses.
 
-import type { Category } from '../types';
+import type { Category, Product } from '../types';
 
-const MOCK_DELAY_MS = 450;
+const BASE_URL = import.meta.env.VITE_PRODUCT_API_URL;
+const PAGE_SIZE = 100;
 
-const mockCategories: Category[] = [
-  {
-    id: 1,
-    name: 'חלב ומוצריו',
-    products: [
-      { id: 101, name: 'קוטג׳', price: 6.9, unit: 'יחידה' },
-      { id: 102, name: 'חלב 3%', price: 5.5, unit: 'ליטר' },
-      { id: 103, name: 'שמנת חמוצה', price: 4.2, unit: 'יחידה' },
-      { id: 104, name: 'גבינה צהובה', price: 12.9, unit: '200 גרם' },
-    ],
-  },
-  {
-    id: 2,
-    name: 'בשר ודגים',
-    products: [
-      { id: 201, name: 'חזה עוף', price: 39.9, unit: 'ק"ג' },
-      { id: 202, name: 'בשר טחון', price: 54.0, unit: 'ק"ג' },
-      { id: 203, name: 'פילה סלמון', price: 69.9, unit: 'ק"ג' },
-    ],
-  },
-  {
-    id: 3,
-    name: 'ירקות ופירות',
-    products: [
-      { id: 301, name: 'עגבניות', price: 6.5, unit: 'ק"ג' },
-      { id: 302, name: 'מלפפונים', price: 5.9, unit: 'ק"ג' },
-      { id: 303, name: 'תפוחים', price: 8.9, unit: 'ק"ג' },
-      { id: 304, name: 'בננות', price: 7.5, unit: 'ק"ג' },
-    ],
-  },
-  {
-    id: 4,
-    name: 'מאפים ולחם',
-    products: [
-      { id: 401, name: 'לחם מלא', price: 9.9, unit: 'יחידה' },
-      { id: 402, name: 'פיתות', price: 6.0, unit: 'חבילה' },
-      { id: 403, name: 'בגט', price: 7.9, unit: 'יחידה' },
-    ],
-  },
-];
+interface PagedResult<T> {
+  items: T[];
+  pageNumber: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+}
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+interface CategoryDto {
+  id: number;
+  name: string;
+}
+
+interface ProductDto {
+  id: number;
+  name: string;
+  price: number;
+  categoryId: number;
+}
+
+async function fetchAllPages<T>(path: string): Promise<T[]> {
+  const items: T[] = [];
+  let pageNumber = 1;
+  let totalPages = 1;
+
+  do {
+    const response = await fetch(
+      `${BASE_URL}${path}${path.includes('?') ? '&' : '?'}pageNumber=${pageNumber}&pageSize=${PAGE_SIZE}`
+    );
+    if (!response.ok) {
+      throw new Error(`שגיאה בטעינת הנתונים מהשרת (${response.status})`);
+    }
+    const page: PagedResult<T> = await response.json();
+    items.push(...page.items);
+    totalPages = page.totalPages;
+    pageNumber += 1;
+  } while (pageNumber <= totalPages);
+
+  return items;
 }
 
 export async function fetchCategories(): Promise<Category[]> {
-  await delay(MOCK_DELAY_MS);
-  return JSON.parse(JSON.stringify(mockCategories));
+  const categoryDtos = await fetchAllPages<CategoryDto>('/api/categories');
+
+  return Promise.all(
+    categoryDtos.map(async (category): Promise<Category> => {
+      const productDtos = await fetchAllPages<ProductDto>(`/api/categories/${category.id}/products`);
+      const products: Product[] = productDtos.map((product) => ({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+      }));
+      return { id: category.id, name: category.name, products };
+    })
+  );
 }

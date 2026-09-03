@@ -18,9 +18,7 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
     <div className="product-card">
       <div className="product-card__info">
         <span className="product-card__name">{product.name}</span>
-        <span className="product-card__price">
-          {product.price.toFixed(2)} ₪ / {product.unit}
-        </span>
+        <span className="product-card__price">{product.price.toFixed(2)} ₪</span>
       </div>
       <div className="product-card__actions">
         <div className="stepper">
