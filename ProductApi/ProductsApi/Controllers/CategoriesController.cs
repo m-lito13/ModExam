@@ -22,15 +22,29 @@ public class CategoriesController(ICategoryService categoryService, ILogger<Cate
     [HttpGet("{id:int}")]
     public async Task<ActionResult<CategoryDto>> GetCategoryById(int id)
     {
+        logger.LogInformation("Fetching category {CategoryId}", id);
         var category = await categoryService.GetCategoryByIdAsync(id);
-        return category is null ? NotFound() : Ok(category);
+        if (category is null)
+        {
+            logger.LogWarning("Category {CategoryId} not found", id);
+            return NotFound();
+        }
+
+        return Ok(category);
     }
 
     // GET /api/categories/{id}/products?pageNumber=1&pageSize=10
     [HttpGet("{id:int}/products")]
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProductsByCategory(int id, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
+        logger.LogInformation("Fetching products for category {CategoryId} page {PageNumber} (size {PageSize})", id, pageNumber, pageSize);
         var products = await categoryService.GetProductsByCategoryAsync(id, pageNumber, pageSize);
-        return products is null ? NotFound() : Ok(products);
+        if (products is null)
+        {
+            logger.LogWarning("Category {CategoryId} not found when fetching products", id);
+            return NotFound();
+        }
+
+        return Ok(products);
     }
 }
