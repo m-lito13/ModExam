@@ -92,7 +92,7 @@ export default function OrderForm({ onSubmit, submitting, submitError }: OrderFo
       {submitError && <p className="error-text">{submitError}</p>}
 
       <button type="submit" className="btn btn--accent btn--full" disabled={submitting || !isFormFilled}>
-        {submitting ? t('orderForm.submitting') : t('orderForm.submit')}
+        {submitting ? t('orderForm.submitting') : submitError ? t('orderForm.retry') : t('orderForm.submit')}
       </button>
     </form>
   );

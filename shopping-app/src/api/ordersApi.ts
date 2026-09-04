@@ -31,14 +31,21 @@ interface ValidationErrorDto {
 }
 
 export async function submitOrder(orderPayload: OrderPayload, idempotencyKey: string): Promise<OrderResult> {
-  const response = await fetch(`${BASE_URL}/api/orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Idempotency-Key': idempotencyKey,
-    },
-    body: JSON.stringify(orderPayload),
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${BASE_URL}/api/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Idempotency-Key': idempotencyKey,
+      },
+      body: JSON.stringify(orderPayload),
+    });
+  } catch {
+    // fetch rejects (offline, DNS failure, API unreachable) rather than resolving with a bad status,
+    // so it needs its own translated message instead of the raw "Failed to fetch" TypeError.
+    throw new Error(t('errors.networkError'));
+  }
 
   if (!response.ok) {
     const errorBody: ValidationErrorDto = await response.json().catch(() => ({ error: 'UnknownError' }));

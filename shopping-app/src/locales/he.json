@@ -44,7 +44,8 @@
     "addressPlaceholder": "רחוב, מספר בית, עיר",
     "emailLabel": "דוא״ל *",
     "submitting": "שולח הזמנה…",
-    "submit": "אשר הזמנה"
+    "submit": "אשר הזמנה",
+    "retry": "נסה שוב"
   },
   "confirmation": {
     "title": "ההזמנה התקבלה!",
@@ -54,6 +55,7 @@
   },
   "errors": {
     "submitOrder": "שגיאה בשליחת ההזמנה ({{status}})",
+    "networkError": "לא ניתן להתחבר לשרת. בדקו את החיבור ונסו שוב.",
     "loadData": "שגיאה בטעינת הנתונים מהשרת ({{status}})",
     "loadCategories": "שגיאה בטעינת הקטגוריות"
   }
