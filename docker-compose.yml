@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:8.12.0'
+    container_name: elasticsearch_1
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - '9200:9200'
+    volumes:
+      - 'es_data:/usr/share/elasticsearch/data'
+    networks:
+      - local-data-network
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'curl -s http://localhost:9200 || exit 1'
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana:8.12.0'
+    container_name: kibana_1
+    ports:
+      - '5601:5601'
+    environment:
+      - 'ELASTICSEARCH_HOSTS=http://elasticsearch:9200'
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - local-data-network
+
+  sqlserver:
+    image: 'mcr.microsoft.com/mssql/server:2022-latest'
+    container_name: sqlserver_1
+    user: root
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Testpwd123!
+    ports:
+      - '1433:1433'
+    volumes:
+      - 'mssql_data:/var/opt/mssql/data'
+    networks:
+      - local-data-network
+
+volumes:
+  es_data:
+    driver: local
+  mssql_data:
+    driver: local
+
+networks:
+  local-data-network:
+    driver: bridge
