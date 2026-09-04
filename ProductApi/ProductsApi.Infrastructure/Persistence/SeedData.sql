@@ -1,4 +1,4 @@
--- Sample data insert script for ProductsApiDb
+﻿-- Sample data insert script for ProductsApiDb
 -- Matches categories/products shown in the UI mockup.
 
 DELETE FROM [Products];
