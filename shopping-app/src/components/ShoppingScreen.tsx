@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
   loadCategories,
-  selectCatalogError,
-  selectCatalogStatus,
+  loadProductsPage,
+  selectCategoriesError,
+  selectCategoriesStatus,
   selectCategories,
+  selectProductsPage,
 } from '../features/catalog/catalogSlice';
 import { addToCart } from '../features/cart/cartSlice';
 import { goToScreen } from '../features/ui/uiSlice';
@@ -17,23 +19,35 @@ import { t } from '../i18n/t';
 export default function ShoppingScreen() {
   const dispatch = useAppDispatch();
   const categories = useAppSelector(selectCategories);
-  const status = useAppSelector(selectCatalogStatus);
-  const error = useAppSelector(selectCatalogError);
+  const categoriesStatus = useAppSelector(selectCategoriesStatus);
+  const categoriesError = useAppSelector(selectCategoriesError);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (status === 'idle') {
+    if (categoriesStatus === 'idle') {
       dispatch(loadCategories());
     }
-  }, [status, dispatch]);
+  }, [categoriesStatus, dispatch]);
 
   useEffect(() => {
-    if (status === 'succeeded' && categories.length > 0 && selectedCategoryId === null) {
+    if (categoriesStatus === 'succeeded' && categories.length > 0 && selectedCategoryId === null) {
       setSelectedCategoryId(categories[0].id);
     }
-  }, [status, categories, selectedCategoryId]);
+  }, [categoriesStatus, categories, selectedCategoryId]);
 
-  const selectedCategory = categories.find((c) => c.id === selectedCategoryId);
+  useEffect(() => {
+    if (selectedCategoryId !== null) {
+      dispatch(loadProductsPage({ categoryId: selectedCategoryId, pageNumber: page }));
+    }
+  }, [dispatch, selectedCategoryId, page]);
+
+  const productsPage = useAppSelector(selectProductsPage(selectedCategoryId ?? -1, page));
+
+  const handleSelectCategory = (id: number) => {
+    setSelectedCategoryId(id);
+    setPage(1);
+  };
 
   const handleAdd = (product: Product, quantity: number) => {
     dispatch(addToCart({ product, categoryId: selectedCategoryId, quantity }));
@@ -45,17 +59,25 @@ export default function ShoppingScreen() {
         <h1 className="screen-title">{t('shopping.title')}</h1>
         <p className="screen-subtitle">{t('shopping.subtitle')}</p>
 
-        {status === 'loading' && <p className="empty-hint">{t('shopping.loading')}</p>}
-        {status === 'failed' && <p className="error-text">{error}</p>}
+        {categoriesStatus === 'loading' && <p className="empty-hint">{t('shopping.loading')}</p>}
+        {categoriesStatus === 'failed' && <p className="error-text">{categoriesError}</p>}
 
-        {status === 'succeeded' && (
+        {categoriesStatus === 'succeeded' && (
           <>
             <CategorySelector
               categories={categories}
               selectedId={selectedCategoryId}
-              onSelect={setSelectedCategoryId}
+              onSelect={handleSelectCategory}
             />
-            <ProductList products={selectedCategory?.products} onAdd={handleAdd} />
+            <ProductList
+              products={productsPage?.items}
+              status={productsPage?.status ?? 'loading'}
+              error={productsPage?.error ?? null}
+              page={page}
+              totalPages={productsPage?.totalPages ?? 1}
+              onPageChange={setPage}
+              onAdd={handleAdd}
+            />
           </>
         )}
       </section>

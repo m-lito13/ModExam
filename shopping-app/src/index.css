@@ -171,6 +171,19 @@ button, input, select {
   gap: 10px;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.pagination__indicator {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
 .product-card {
   display: flex;
   align-items: center;
@@ -430,7 +443,7 @@ button, input, select {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 40px;
-  max-width: 420px;
+  max-width: 520px;
   width: 100%;
   text-align: center;
 }
@@ -446,6 +459,14 @@ button, input, select {
   color: var(--primary);
   font-size: 22px;
   margin-bottom: 16px;
+}
+
+.confirmation-card__order-id {
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow-x: auto;
 }
 
 .confirmation-card .summary-list {

@@ -18,7 +18,10 @@
     "empty": "אין מוצרים להצגה בקטגוריה זו.",
     "decreaseQty": "הפחת כמות",
     "increaseQty": "הוסף כמות",
-    "addToCart": "הוסף לסל"
+    "addToCart": "הוסף לסל",
+    "pagePrevious": "הקודם",
+    "pageNext": "הבא",
+    "pageIndicator": "עמוד {{page}} מתוך {{total}}"
   },
   "cart": {
     "title": "הסל שלך",
@@ -49,7 +52,8 @@
   },
   "confirmation": {
     "title": "ההזמנה התקבלה!",
-    "subtitle": "מספר הזמנה {{orderId}} נשלח אל {{email}}",
+    "subtitle": "ההזמנה נקלטה בהצלחה ותטופל בקרוב.",
+    "orderNumber": "מספר הזמנה: {{orderId}}",
     "totalPaid": "סה״כ ששולם",
     "newOrder": "התחילו הזמנה חדשה"
   },

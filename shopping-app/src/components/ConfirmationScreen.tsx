@@ -13,9 +13,8 @@ export default function ConfirmationScreen() {
       <div className="confirmation-card">
         <span className="confirmation-card__mark" aria-hidden="true">✓</span>
         <h1 className="screen-title">{t('confirmation.title')}</h1>
-        <p className="screen-subtitle">
-          {t('confirmation.subtitle', { orderId: order.orderId, email: order.customer.email })}
-        </p>
+        <p className="screen-subtitle">{t('confirmation.subtitle')}</p>
+        <p className="confirmation-card__order-id">{t('confirmation.orderNumber', { orderId: order.orderId })}</p>
 
         <ul className="summary-list">
           {order.items.map((item) => (
