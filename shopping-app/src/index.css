@@ -497,3 +497,150 @@ button, input, select {
     position: static;
   }
 }
+
+@media (max-width: 860px) {
+  .app-main {
+    padding: 12px;
+  }
+
+  .catalog-panel, .summary-panel, .form-panel {
+    padding: 16px;
+  }
+
+  .screen-title {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+
+  .screen-subtitle {
+    margin-bottom: 10px;
+  }
+
+  .field-label {
+    margin-bottom: 4px;
+  }
+
+  .category-selector {
+    margin-bottom: 8px;
+  }
+
+  .product-list {
+    gap: 4px;
+  }
+
+  .product-card {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+
+  .product-card__info {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .product-card__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .product-card__actions {
+    flex: 0 0 auto;
+    gap: 8px;
+  }
+
+  .stepper__btn {
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+  }
+
+  .stepper__value {
+    min-width: 18px;
+    font-size: 13px;
+  }
+
+  .product-card .btn--primary {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .pagination {
+    margin-top: 10px;
+  }
+}
+
+/* Short/landscape viewports (e.g. Nest Hub) wide enough to keep the two-column
+   layout but too short to show the product list + pagination at full desktop size. */
+@media (max-height: 650px) and (min-width: 861px) {
+  .app-header {
+    padding: 10px 24px;
+  }
+
+  .app-main {
+    padding: 12px 20px;
+  }
+
+  .catalog-panel, .summary-panel, .form-panel {
+    padding: 16px;
+  }
+
+  .screen-title {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  .screen-subtitle {
+    margin-bottom: 12px;
+  }
+
+  .category-selector {
+    margin-bottom: 10px;
+  }
+
+  .product-list {
+    gap: 6px;
+  }
+
+  .product-card {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .product-card__info {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .product-card__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .product-card__actions {
+    flex: 0 0 auto;
+    gap: 8px;
+  }
+
+  .stepper__btn {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+
+  .product-card .btn--primary {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .pagination {
+    margin-top: 10px;
+  }
+}
