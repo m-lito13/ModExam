@@ -12,6 +12,7 @@ import CategorySelector from './CategorySelector';
 import ProductList from './ProductList';
 import CartSummary from './CartSummary';
 import { SCREEN, type Product } from '../types';
+import { t } from '../i18n/t';
 
 export default function ShoppingScreen() {
   const dispatch = useAppDispatch();
@@ -41,10 +42,10 @@ export default function ShoppingScreen() {
   return (
     <div className="screen screen--shopping">
       <section className="catalog-panel">
-        <h1 className="screen-title">רשימת קניות</h1>
-        <p className="screen-subtitle">בחרו קטגוריה, הוסיפו מוצרים והמשיכו להזמנה.</p>
+        <h1 className="screen-title">{t('shopping.title')}</h1>
+        <p className="screen-subtitle">{t('shopping.subtitle')}</p>
 
-        {status === 'loading' && <p className="empty-hint">טוען קטגוריות ומוצרים…</p>}
+        {status === 'loading' && <p className="empty-hint">{t('shopping.loading')}</p>}
         {status === 'failed' && <p className="error-text">{error}</p>}
 
         {status === 'succeeded' && (

@@ -6,6 +6,7 @@
 // category's products, and assembles the nested Category[] shape the app uses.
 
 import type { Category, Product } from '../types';
+import { t } from '../i18n/t';
 
 const BASE_URL = import.meta.env.VITE_PRODUCT_API_URL;
 const PAGE_SIZE = 100;
@@ -40,7 +41,7 @@ async function fetchAllPages<T>(path: string): Promise<T[]> {
       `${BASE_URL}${path}${path.includes('?') ? '&' : '?'}pageNumber=${pageNumber}&pageSize=${PAGE_SIZE}`
     );
     if (!response.ok) {
-      throw new Error(`שגיאה בטעינת הנתונים מהשרת (${response.status})`);
+      throw new Error(t('errors.loadData', { status: response.status }));
     }
     const page: PagedResult<T> = await response.json();
     items.push(...page.items);

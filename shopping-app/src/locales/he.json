@@ -1,0 +1,60 @@
+{
+  "header": {
+    "brand": "ORDERS",
+    "stepShopping": "רשימת קניות",
+    "stepSummary": "סיכום הזמנה",
+    "stepConfirmation": "אישור"
+  },
+  "shopping": {
+    "title": "רשימת קניות",
+    "subtitle": "בחרו קטגוריה, הוסיפו מוצרים והמשיכו להזמנה.",
+    "loading": "טוען קטגוריות ומוצרים…"
+  },
+  "category": {
+    "label": "קטגוריה",
+    "placeholder": "בחר/י קטגוריה"
+  },
+  "product": {
+    "empty": "אין מוצרים להצגה בקטגוריה זו.",
+    "decreaseQty": "הפחת כמות",
+    "increaseQty": "הוסף כמות",
+    "addToCart": "הוסף לסל"
+  },
+  "cart": {
+    "title": "הסל שלך",
+    "empty": "הסל ריק. הוסיפו מוצרים כדי להתחיל.",
+    "qtyLabel": "כמות עבור {{name}}",
+    "removeLabel": "הסר {{name}} מהסל",
+    "total": "סה״כ",
+    "checkout": "המשך להזמנה"
+  },
+  "summary": {
+    "back": "→ חזרה לרשימת הקניות",
+    "title": "סיכום הזמנה",
+    "subtitle": "בדקו את הפריטים ומלאו את הפרטים כדי לשלוח את ההזמנה.",
+    "totalToPay": "סה״כ לתשלום",
+    "shippingDetails": "פרטי משלוח"
+  },
+  "orderForm": {
+    "requiredField": "שדה חובה",
+    "invalidEmail": "כתובת מייל לא תקינה",
+    "fullNameLabel": "שם פרטי ומשפחה *",
+    "fullNamePlaceholder": "שם פרטי ומשפחה",
+    "addressLabel": "כתובת מלאה *",
+    "addressPlaceholder": "רחוב, מספר בית, עיר",
+    "emailLabel": "דוא״ל *",
+    "submitting": "שולח הזמנה…",
+    "submit": "אשר הזמנה"
+  },
+  "confirmation": {
+    "title": "ההזמנה התקבלה!",
+    "subtitle": "מספר הזמנה {{orderId}} נשלח אל {{email}}",
+    "totalPaid": "סה״כ ששולם",
+    "newOrder": "התחילו הזמנה חדשה"
+  },
+  "errors": {
+    "submitOrder": "שגיאה בשליחת ההזמנה ({{status}})",
+    "loadData": "שגיאה בטעינת הנתונים מהשרת ({{status}})",
+    "loadCategories": "שגיאה בטעינת הקטגוריות"
+  }
+}

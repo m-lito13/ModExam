@@ -1,5 +1,6 @@
 import ProductCard from './ProductCard';
 import type { Product } from '../types';
+import { t } from '../i18n/t';
 
 interface ProductListProps {
   products: Product[] | undefined;
@@ -8,7 +9,7 @@ interface ProductListProps {
 
 export default function ProductList({ products, onAdd }: ProductListProps) {
   if (!products || products.length === 0) {
-    return <p className="empty-hint">אין מוצרים להצגה בקטגוריה זו.</p>;
+    return <p className="empty-hint">{t('product.empty')}</p>;
   }
 
   return (

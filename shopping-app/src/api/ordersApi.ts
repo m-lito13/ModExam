@@ -7,6 +7,7 @@
 //   response (409) -> { error: 'IdempotencyConflictError', message } (key reused with different order details)
 
 import type { Customer, OrderResult } from '../types';
+import { t } from '../i18n/t';
 
 const BASE_URL = import.meta.env.VITE_ORDER_API_URL;
 
@@ -43,7 +44,7 @@ export async function submitOrder(orderPayload: OrderPayload, idempotencyKey: st
     const errorBody: ValidationErrorDto = await response.json().catch(() => ({ error: 'UnknownError' }));
     const message = errorBody.details
       ? Object.values(errorBody.details).flat().join(', ')
-      : errorBody.message ?? `שגיאה בשליחת ההזמנה (${response.status})`;
+      : errorBody.message ?? t('errors.submitOrder', { status: response.status });
     throw new Error(message);
   }
 

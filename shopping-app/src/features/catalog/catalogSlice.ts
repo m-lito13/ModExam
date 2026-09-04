@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchCategories } from '../../api/catalogApi';
 import type { RootState } from '../../app/store';
 import type { Category } from '../../types';
+import { t } from '../../i18n/t';
 
 type CatalogStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
@@ -38,7 +39,7 @@ const catalogSlice = createSlice({
       })
       .addCase(loadCategories.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message ?? 'שגיאה בטעינת הקטגוריות';
+        state.error = action.error.message ?? t('errors.loadCategories');
       });
   },
 });

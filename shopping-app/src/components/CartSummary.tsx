@@ -5,6 +5,7 @@ import {
   selectCartTotal,
   updateCartQuantity,
 } from '../features/cart/cartSlice';
+import { t } from '../i18n/t';
 
 interface CartSummaryProps {
   onCheckout: () => void;
@@ -17,10 +18,10 @@ export default function CartSummary({ onCheckout }: CartSummaryProps) {
 
   return (
     <aside className="cart-panel">
-      <h2 className="cart-panel__title">הסל שלך</h2>
+      <h2 className="cart-panel__title">{t('cart.title')}</h2>
 
       {items.length === 0 ? (
-        <p className="empty-hint">הסל ריק. הוסיפו מוצרים כדי להתחיל.</p>
+        <p className="empty-hint">{t('cart.empty')}</p>
       ) : (
         <ul className="cart-list">
           {items.map((item) => (
@@ -45,12 +46,12 @@ export default function CartSummary({ onCheckout }: CartSummaryProps) {
                       })
                     )
                   }
-                  aria-label={`כמות עבור ${item.name}`}
+                  aria-label={t('cart.qtyLabel', { name: item.name })}
                 />
                 <button
                   type="button"
                   className="icon-btn"
-                  aria-label={`הסר ${item.name} מהסל`}
+                  aria-label={t('cart.removeLabel', { name: item.name })}
                   onClick={() => dispatch(removeFromCart({ productId: item.productId }))}
                 >
                   ✕
@@ -63,7 +64,7 @@ export default function CartSummary({ onCheckout }: CartSummaryProps) {
 
       <div className="cart-panel__footer">
         <div className="cart-panel__total">
-          <span>סה״כ</span>
+          <span>{t('cart.total')}</span>
           <span>{total.toFixed(2)} ₪</span>
         </div>
         <button
@@ -72,7 +73,7 @@ export default function CartSummary({ onCheckout }: CartSummaryProps) {
           disabled={items.length === 0}
           onClick={onCheckout}
         >
-          המשך להזמנה
+          {t('cart.checkout')}
         </button>
       </div>
     </aside>

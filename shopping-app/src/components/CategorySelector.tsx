@@ -1,4 +1,5 @@
 import type { Category } from '../types';
+import { t } from '../i18n/t';
 
 interface CategorySelectorProps {
   categories: Category[];
@@ -10,7 +11,7 @@ export default function CategorySelector({ categories, selectedId, onSelect }: C
   return (
     <div className="category-selector">
       <label className="field-label" htmlFor="category-select">
-        קטגוריה
+        {t('category.label')}
       </label>
       <select
         id="category-select"
@@ -19,7 +20,7 @@ export default function CategorySelector({ categories, selectedId, onSelect }: C
         onChange={(event) => onSelect(Number(event.target.value))}
       >
         <option value="" disabled>
-          בחר/י קטגוריה
+          {t('category.placeholder')}
         </option>
         {categories.map((category) => (
           <option key={category.id} value={category.id}>

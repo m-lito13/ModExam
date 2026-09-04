@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Product } from '../types';
+import { t } from '../i18n/t';
 
 interface ProductCardProps {
   product: Product;
@@ -25,7 +26,7 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
           <button
             type="button"
             className="stepper__btn"
-            aria-label="הפחת כמות"
+            aria-label={t('product.decreaseQty')}
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
           >
             −
@@ -34,14 +35,14 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
           <button
             type="button"
             className="stepper__btn"
-            aria-label="הוסף כמות"
+            aria-label={t('product.increaseQty')}
             onClick={() => setQuantity((q) => q + 1)}
           >
             +
           </button>
         </div>
         <button type="button" className="btn btn--primary" onClick={handleAdd}>
-          הוסף לסל
+          {t('product.addToCart')}
         </button>
       </div>
     </div>

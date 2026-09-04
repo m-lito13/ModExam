@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Customer } from '../types';
+import { t } from '../i18n/t';
 
 const initialForm: Customer = { fullName: '', address: '', email: '' };
 
@@ -7,12 +8,12 @@ type FormErrors = Partial<Record<keyof Customer, string>>;
 
 function validate(form: Customer): FormErrors {
   const errors: FormErrors = {};
-  if (!form.fullName.trim()) errors.fullName = 'שדה חובה';
-  if (!form.address.trim()) errors.address = 'שדה חובה';
+  if (!form.fullName.trim()) errors.fullName = t('orderForm.requiredField');
+  if (!form.address.trim()) errors.address = t('orderForm.requiredField');
   if (!form.email.trim()) {
-    errors.email = 'שדה חובה';
+    errors.email = t('orderForm.requiredField');
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'כתובת מייל לא תקינה';
+    errors.email = t('orderForm.invalidEmail');
   }
   return errors;
 }
@@ -47,12 +48,12 @@ export default function OrderForm({ onSubmit, submitting, submitError }: OrderFo
     <form className="order-form" onSubmit={handleSubmit} noValidate>
       <div className="field">
         <label className="field-label" htmlFor="fullName">
-          שם פרטי ומשפחה *
+          {t('orderForm.fullNameLabel')}
         </label>
         <input
           id="fullName"
           className="input"
-          placeholder="שם פרטי ומשפחה"
+          placeholder={t('orderForm.fullNamePlaceholder')}
           value={form.fullName}
           onChange={handleChange('fullName')}
         />
@@ -61,12 +62,12 @@ export default function OrderForm({ onSubmit, submitting, submitError }: OrderFo
 
       <div className="field">
         <label className="field-label" htmlFor="address">
-          כתובת מלאה *
+          {t('orderForm.addressLabel')}
         </label>
         <input
           id="address"
           className="input"
-          placeholder="רחוב, מספר בית, עיר"
+          placeholder={t('orderForm.addressPlaceholder')}
           value={form.address}
           onChange={handleChange('address')}
         />
@@ -75,7 +76,7 @@ export default function OrderForm({ onSubmit, submitting, submitError }: OrderFo
 
       <div className="field">
         <label className="field-label" htmlFor="email">
-          דוא״ל *
+          {t('orderForm.emailLabel')}
         </label>
         <input
           id="email"
@@ -91,7 +92,7 @@ export default function OrderForm({ onSubmit, submitting, submitError }: OrderFo
       {submitError && <p className="error-text">{submitError}</p>}
 
       <button type="submit" className="btn btn--accent btn--full" disabled={submitting || !isFormFilled}>
-        {submitting ? 'שולח הזמנה…' : 'אשר הזמנה'}
+        {submitting ? t('orderForm.submitting') : t('orderForm.submit')}
       </button>
     </form>
   );

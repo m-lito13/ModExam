@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectLastOrder, startNewOrder } from '../features/ui/uiSlice';
+import { t } from '../i18n/t';
 
 export default function ConfirmationScreen() {
   const dispatch = useAppDispatch();
@@ -11,9 +12,9 @@ export default function ConfirmationScreen() {
     <div className="screen screen--confirmation">
       <div className="confirmation-card">
         <span className="confirmation-card__mark" aria-hidden="true">✓</span>
-        <h1 className="screen-title">ההזמנה התקבלה!</h1>
+        <h1 className="screen-title">{t('confirmation.title')}</h1>
         <p className="screen-subtitle">
-          מספר הזמנה <strong>{order.orderId}</strong> נשלח אל {order.customer.email}
+          {t('confirmation.subtitle', { orderId: order.orderId, email: order.customer.email })}
         </p>
 
         <ul className="summary-list">
@@ -27,12 +28,12 @@ export default function ConfirmationScreen() {
           ))}
         </ul>
         <div className="cart-panel__total">
-          <span>סה״כ ששולם</span>
+          <span>{t('confirmation.totalPaid')}</span>
           <span>{order.total.toFixed(2)} ₪</span>
         </div>
 
         <button type="button" className="btn btn--primary btn--full" onClick={() => dispatch(startNewOrder())}>
-          התחילו הזמנה חדשה
+          {t('confirmation.newOrder')}
         </button>
       </div>
     </div>
