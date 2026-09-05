@@ -1,3 +1,6 @@
+# ==========================================
+# Node.js / Web / Frontend
+# ==========================================
 # Logs
 logs
 *.log
@@ -85,9 +88,6 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
 
 # vuepress build output
 .vuepress/dist
@@ -141,3 +141,69 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# ==========================================
+# .NET / ASP.NET Core (.NET 10)
+# ==========================================
+# Build & Publish Artifacts
+[Bb]in/
+[Oo]bj/
+**/[Bb]in/
+**/[Oo]bj/
+publish/
+**/publish/
+
+# Visual Studio / Roslyn
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+*.pidb
+*.svclog
+
+# JetBrains Rider / Resharper
+.idea/
+*_ReSharper*/
+*.sln.iml
+
+# VS Code (.NET local settings override)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local Environment & Secret Overrides
+appsettings.Local.json
+appsettings.Secrets.json
+appsettings.Development.local.json
+*.pfx
+*.publishsettings
+
+# Local Databases / EF Core Local DBs
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.mdf
+*.ldf
+
+# NuGet Packages & Caches
+*.nupkg
+*.snupkg
+**/packages/
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+# Test Results & Code Coverage
+TestResults/
+*.coverage
+*.coveragexml
+
+# OpenAPI / NSwag / Auto-generated
+**/serviceWorker.js
