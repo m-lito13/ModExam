@@ -16,7 +16,10 @@ export function createApp(container: AwilixContainer<Cradle>): Express {
   app.use(cors());
   app.use(express.json());
 
-  app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+  app.get('/health', async (_req, res) => {
+    const healthy = await container.cradle.orderRepository.checkHealth();
+    res.status(healthy ? 200 : 503).json({ status: healthy ? 'ok' : 'error' });
+  });
 
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
 

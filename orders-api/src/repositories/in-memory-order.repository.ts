@@ -40,4 +40,8 @@ export class InMemoryOrderRepository implements IOrderRepository {
   async findAll(): Promise<Order[]> {
     return Array.from(this.orders.values());
   }
+
+  async checkHealth(): Promise<boolean> {
+    return true;
+  }
 }

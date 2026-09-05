@@ -85,4 +85,13 @@ export class ElasticsearchOrderRepository implements IOrderRepository {
       .map((hit) => hit._source)
       .filter((doc: Order | undefined): doc is Order => doc !== undefined);
   }
+
+  async checkHealth(): Promise<boolean> {
+    try {
+      return await this.client.ping();
+    } catch (err) {
+      this.logger.error('Elasticsearch health check failed', { err });
+      return false;
+    }
+  }
 }

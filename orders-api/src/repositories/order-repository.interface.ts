@@ -17,4 +17,11 @@ export interface IOrderRepository {
   create(input: CreateOrderInput, idempotencyKey?: string): Promise<Order>;
   findById(id: string): Promise<Order | null>;
   findAll(): Promise<Order[]>;
+
+  /**
+   * Used by the /health endpoint. Should resolve false (not throw) when the
+   * backing store is unreachable, so the caller can report a 503 instead of
+   * letting the error surface as an unrelated failure.
+   */
+  checkHealth(): Promise<boolean>;
 }
