@@ -69,3 +69,5 @@ export const selectCartTotal = (state: RootState) =>
     (sum, item) => sum + item.quantity * item.price,
     0
   );
+export const selectCartHasStockIssues = (state: RootState) =>
+  Object.values(state.cart.items).some((item) => item.quantity > item.stockQuantity);

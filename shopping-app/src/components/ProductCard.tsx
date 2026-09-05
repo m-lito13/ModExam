@@ -15,6 +15,11 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
     setQuantity(1);
   };
 
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const digitsOnly = event.target.value.replace(/\D/g, '');
+    setQuantity(digitsOnly === '' ? 1 : Math.max(1, Number(digitsOnly)));
+  };
+
   return (
     <div className="product-card">
       <div className="product-card__info">
@@ -31,7 +36,15 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
           >
             −
           </button>
-          <span className="stepper__value">{quantity}</span>
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            className="stepper__value"
+            value={quantity}
+            onChange={handleQuantityChange}
+            aria-label={t('product.quantityLabel')}
+          />
           <button
             type="button"
             className="stepper__btn"

@@ -18,6 +18,7 @@
     "empty": "אין מוצרים להצגה בקטגוריה זו.",
     "decreaseQty": "הפחת כמות",
     "increaseQty": "הוסף כמות",
+    "quantityLabel": "כמות",
     "addToCart": "הוסף לסל",
     "pagePrevious": "הקודם",
     "pageNext": "הבא",
@@ -37,7 +38,7 @@
     "subtitle": "בדקו את הפריטים ומלאו את הפרטים כדי לשלוח את ההזמנה.",
     "totalToPay": "סה״כ לתשלום",
     "shippingDetails": "פרטי משלוח",
-    "stockExceeded": "הכמות שנבחרה עבור {{name}} חורגת מהמלאי הזמין ({{stock}} יח׳)."
+    "stockExceeded": "הכמות שנבחרה עבור {{name}} חורגת מהמלאי הזמין ({{stock}} יח׳)."
   },
   "orderForm": {
     "requiredField": "שדה חובה",

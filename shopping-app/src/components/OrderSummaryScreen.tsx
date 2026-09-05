@@ -2,9 +2,9 @@ import { useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
   clearCart,
+  selectCartHasStockIssues,
   selectCartItems,
   selectCartTotal,
-  updateCartQuantity,
 } from '../features/cart/cartSlice';
 import { selectCategories } from '../features/catalog/catalogSlice';
 import { goToScreen, setLastOrder } from '../features/ui/uiSlice';
@@ -29,7 +29,7 @@ export default function OrderSummaryScreen() {
   }
   const idempotencyKey = idempotencyKeyRef.current;
 
-  const hasStockIssues = items.some((item) => item.quantity > item.stockQuantity);
+  const hasStockIssues = useAppSelector(selectCartHasStockIssues);
 
   const handleSubmit = async (customer: Customer) => {
     if (hasStockIssues) return;
@@ -69,23 +69,7 @@ export default function OrderSummaryScreen() {
             return (
               <li key={item.productId} className="summary-list__row">
                 <span>
-                  {item.name} ×{' '}
-                  <input
-                    type="number"
-                    min="1"
-                    max={item.stockQuantity}
-                    className="cart-list__qty"
-                    value={item.quantity}
-                    aria-label={t('cart.qtyLabel', { name: item.name })}
-                    onChange={(event) =>
-                      dispatch(
-                        updateCartQuantity({
-                          productId: item.productId,
-                          quantity: Number(event.target.value),
-                        })
-                      )
-                    }
-                  />
+                  {item.name} × {item.quantity}
                 </span>
                 <span>{(item.price * item.quantity).toFixed(2)} ₪</span>
                 {exceedsStock && (
