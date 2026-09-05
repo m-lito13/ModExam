@@ -10,7 +10,11 @@ namespace ProductsApi.Controllers;
 [Produces("application/json")]
 public class CategoriesController(ICategoryService categoryService, ILogger<CategoriesController> logger) : ControllerBase
 {
-    // GET /api/categories?pageNumber=1&pageSize=10
+    /// <summary>
+    /// Gets a paged list of categories.
+    /// </summary>
+    /// <param name="pageNumber">The 1-based page number to retrieve.</param>
+    /// <param name="pageSize">The number of categories per page (max 100).</param>
     [HttpGet]
     public async Task<ActionResult<PagedResult<CategoryDto>>> GetCategories([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
@@ -18,7 +22,10 @@ public class CategoriesController(ICategoryService categoryService, ILogger<Cate
         return Ok(await categoryService.GetCategoriesAsync(pageNumber, pageSize));
     }
 
-    // GET /api/categories/{id}
+    /// <summary>
+    /// Gets a single category by its id.
+    /// </summary>
+    /// <param name="id">The category id.</param>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<CategoryDto>> GetCategoryById(int id)
     {
@@ -33,7 +40,12 @@ public class CategoriesController(ICategoryService categoryService, ILogger<Cate
         return Ok(category);
     }
 
-    // GET /api/categories/{id}/products?pageNumber=1&pageSize=10
+    /// <summary>
+    /// Gets a paged list of products belonging to a category.
+    /// </summary>
+    /// <param name="id">The category id.</param>
+    /// <param name="pageNumber">The 1-based page number to retrieve.</param>
+    /// <param name="pageSize">The number of products per page (max 100).</param>
     [HttpGet("{id:int}/products")]
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProductsByCategory(int id, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
