@@ -1,4 +1,4 @@
-version: '3.8'
+name: modexam-data
 
 services:
   elasticsearch:
@@ -22,6 +22,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+      start_period: 240s
 
   kibana:
     image: 'docker.elastic.co/kibana/kibana:8.12.0'
@@ -52,10 +53,13 @@ services:
 
 volumes:
   es_data:
+    name: modexam_es_data
     driver: local
   mssql_data:
+    name: modexam_mssql_data
     driver: local
 
 networks:
   local-data-network:
+    name: local-data-network
     driver: bridge

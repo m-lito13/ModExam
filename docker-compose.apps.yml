@@ -1,0 +1,48 @@
+name: modexam-apps
+
+services:
+  products-api:
+    build:
+      context: ./ProductApi
+      dockerfile: ProductsApi/Dockerfile
+    container_name: products-api_1
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ProductsApiDb;User Id=sa;Password=Testpwd123!;TrustServerCertificate=True;
+    ports:
+      - '5259:5259'
+    restart: on-failure
+    networks:
+      - local-data-network
+
+  orders-api:
+    build:
+      context: ./orders-api
+    container_name: orders-api_1
+    environment:
+      - PORT=4000
+      - NODE_ENV=production
+      - ELASTICSEARCH_NODE=http://elasticsearch:9200
+    ports:
+      - '4000:4000'
+    networks:
+      - local-data-network
+
+  shopping-app:
+    build:
+      context: ./shopping-app
+      args:
+        VITE_PRODUCT_API_URL: http://localhost:5259
+        VITE_ORDER_API_URL: http://localhost:4000
+    container_name: shopping-app_1
+    ports:
+      - '3000:80'
+    depends_on:
+      - products-api
+      - orders-api
+    networks:
+      - local-data-network
+
+networks:
+  local-data-network:
+    external: true
