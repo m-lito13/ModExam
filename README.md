@@ -25,7 +25,7 @@ cd ModExam
 
 ## Environment files
 
-Before running anything, copy the example env files.
+Before running anything, copy the example env files. `.env` is gitignored and not committed to source control (so each environment can hold its own values without risking secrets/local overrides leaking into the repo); `.env.example` is the committed template you copy from.
 
 Bash / Git Bash:
 
@@ -90,7 +90,7 @@ docker exec -it sqlserver_1 /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 
 
 **Note:** the prices in `SeedData.sql` are arbitrary testing values, not real-world prices — don't read anything into them.
 
-### Default local URLs used by the apps:
+### Default local URLs used by the apps
 
 - ProductApi: `http://localhost:5259` (SQL Server on `127.0.0.1,1433`)
 - orders-api: `http://localhost:4000` (Elasticsearch on `http://localhost:9200`)
@@ -114,7 +114,7 @@ Same rule as Mode 1: `docker-compose.yml` (SQL Server, Elasticsearch) must be up
 
 This builds and runs `products-api`, `orders-api`, and `shopping-app` as containers on the same `local-data-network`, connecting to the dockerized SQL Server and Elasticsearch by container name.
 
-### URLs:
+### URLs
 
 - shopping-app: `http://localhost:3000`
 - ProductApi: `http://localhost:5259` (health: `/health`, Swagger: `/swagger`)
