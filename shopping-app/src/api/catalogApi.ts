@@ -29,6 +29,7 @@ interface ProductDto {
   id: number;
   name: string;
   price: number;
+  stockQuantity: number;
   categoryId: number;
 }
 
@@ -70,6 +71,11 @@ export async function fetchProductsPage(
   const page = await fetchPage<ProductDto>(`/api/categories/${categoryId}/products`, pageNumber, pageSize);
   return {
     ...page,
-    items: page.items.map((product) => ({ id: product.id, name: product.name, price: product.price })),
+    items: page.items.map((product) => ({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      stockQuantity: product.stockQuantity,
+    })),
   };
 }

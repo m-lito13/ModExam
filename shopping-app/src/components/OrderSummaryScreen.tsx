@@ -1,6 +1,11 @@
 import { useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { clearCart, selectCartItems, selectCartTotal } from '../features/cart/cartSlice';
+import {
+  clearCart,
+  selectCartItems,
+  selectCartTotal,
+  updateCartQuantity,
+} from '../features/cart/cartSlice';
 import { selectCategories } from '../features/catalog/catalogSlice';
 import { goToScreen, setLastOrder } from '../features/ui/uiSlice';
 import { submitOrder } from '../api/ordersApi';
@@ -24,7 +29,10 @@ export default function OrderSummaryScreen() {
   }
   const idempotencyKey = idempotencyKeyRef.current;
 
+  const hasStockIssues = items.some((item) => item.quantity > item.stockQuantity);
+
   const handleSubmit = async (customer: Customer) => {
+    if (hasStockIssues) return;
     setSubmitting(true);
     setSubmitError(null);
     try {
@@ -56,14 +64,38 @@ export default function OrderSummaryScreen() {
         <p className="screen-subtitle">{t('summary.subtitle')}</p>
 
         <ul className="summary-list">
-          {items.map((item) => (
-            <li key={item.productId} className="summary-list__row">
-              <span>
-                {item.name} × {item.quantity}
-              </span>
-              <span>{(item.price * item.quantity).toFixed(2)} ₪</span>
-            </li>
-          ))}
+          {items.map((item) => {
+            const exceedsStock = item.quantity > item.stockQuantity;
+            return (
+              <li key={item.productId} className="summary-list__row">
+                <span>
+                  {item.name} ×{' '}
+                  <input
+                    type="number"
+                    min="1"
+                    max={item.stockQuantity}
+                    className="cart-list__qty"
+                    value={item.quantity}
+                    aria-label={t('cart.qtyLabel', { name: item.name })}
+                    onChange={(event) =>
+                      dispatch(
+                        updateCartQuantity({
+                          productId: item.productId,
+                          quantity: Number(event.target.value),
+                        })
+                      )
+                    }
+                  />
+                </span>
+                <span>{(item.price * item.quantity).toFixed(2)} ₪</span>
+                {exceedsStock && (
+                  <span className="error-text">
+                    {t('summary.stockExceeded', { name: item.name, stock: item.stockQuantity })}
+                  </span>
+                )}
+              </li>
+            );
+          })}
         </ul>
         <div className="cart-panel__total">
           <span>{t('summary.totalToPay')}</span>
@@ -73,7 +105,12 @@ export default function OrderSummaryScreen() {
 
       <section className="form-panel">
         <h2 className="cart-panel__title">{t('summary.shippingDetails')}</h2>
-        <OrderForm onSubmit={handleSubmit} submitting={submitting} submitError={submitError} />
+        <OrderForm
+          onSubmit={handleSubmit}
+          submitting={submitting}
+          submitError={submitError}
+          disabled={hasStockIssues}
+        />
       </section>
     </div>
   );

@@ -22,9 +22,10 @@ interface OrderFormProps {
   onSubmit: (form: Customer) => void;
   submitting: boolean;
   submitError: string | null;
+  disabled?: boolean;
 }
 
-export default function OrderForm({ onSubmit, submitting, submitError }: OrderFormProps) {
+export default function OrderForm({ onSubmit, submitting, submitError, disabled }: OrderFormProps) {
   const [form, setForm] = useState<Customer>(initialForm);
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -91,7 +92,11 @@ export default function OrderForm({ onSubmit, submitting, submitError }: OrderFo
 
       {submitError && <p className="error-text">{submitError}</p>}
 
-      <button type="submit" className="btn btn--accent btn--full" disabled={submitting || !isFormFilled}>
+      <button
+        type="submit"
+        className="btn btn--accent btn--full"
+        disabled={submitting || !isFormFilled || disabled}
+      >
         {submitting ? t('orderForm.submitting') : submitError ? t('orderForm.retry') : t('orderForm.submit')}
       </button>
     </form>

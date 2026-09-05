@@ -2,6 +2,7 @@ export interface Product {
   id: number;
   name: string;
   price: number;
+  stockQuantity: number;
 }
 
 export interface Category {
@@ -15,6 +16,7 @@ export interface CartItem {
   name: string;
   price: number;
   quantity: number;
+  stockQuantity: number;
 }
 
 export interface Customer {

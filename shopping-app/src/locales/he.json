@@ -36,7 +36,8 @@
     "title": "סיכום הזמנה",
     "subtitle": "בדקו את הפריטים ומלאו את הפרטים כדי לשלוח את ההזמנה.",
     "totalToPay": "סה״כ לתשלום",
-    "shippingDetails": "פרטי משלוח"
+    "shippingDetails": "פרטי משלוח",
+    "stockExceeded": "הכמות שנבחרה עבור {{name}} חורגת מהמלאי הזמין ({{stock}} יח׳)."
   },
   "orderForm": {
     "requiredField": "שדה חובה",

@@ -425,10 +425,16 @@ button, input, select {
 
 .summary-list__row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   font-size: 14px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
+}
+
+.summary-list__row .error-text {
+  flex: 1 0 100%;
+  padding-top: 4px;
 }
 
 /* Confirmation */
