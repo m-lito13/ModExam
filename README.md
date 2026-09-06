@@ -55,7 +55,7 @@ docker compose -f docker-compose.yml up -d --wait
 
 **SQL Server must be up and healthy before ProductApi starts** — as soon as ProductApi starts (`dotnet run`, or the container in Mode 2) it calls `Database.Migrate()` against it, which needs a live connection; starting ProductApi before SQL Server is ready will just fail/retry until it is.
 
-Then run each app locally, in its own terminal:
+`dotnet run` and `npm run dev` are both long-running foreground processes — they start a server and keep running until stopped (`Ctrl+C`), never returning control of the terminal on their own — so run each app in its own, separate terminal/cmd window:
 
 ```bash
 # ProductApi (http://localhost:5259)
@@ -119,6 +119,25 @@ This builds and runs `products-api`, `orders-api`, and `shopping-app` as contain
 - shopping-app: `http://localhost:3000`
 - ProductApi: `http://localhost:5259` (health: `/health`, Swagger: `/swagger`)
 - orders-api: `http://localhost:4000` (health: `/health`, Swagger: `/docs`)
+
+## Viewing orders in Kibana
+
+`docker-compose.yml` also starts Kibana, at `http://localhost:5601`, connected to the same Elasticsearch instance orders-api writes to — useful for browsing the orders placed through the shopping app.
+
+Place at least one order through the shopping-app checkout flow first (there's nothing to see otherwise), and make sure `orders-api/.env` has `DB_PROVIDER=elasticsearch` (the default in `.env.example` — with `DB_PROVIDER=memory` orders aren't persisted to Elasticsearch at all).
+
+**Quick check (no setup):** open `http://localhost:5601`, go to **Management → Dev Tools**, and run:
+
+```
+GET orders/_search
+```
+
+Each submitted order comes back as a hit, with its `fullName`, `address`, `email`, `createdAt`, and nested `products` (category/productName/quantity) — confirming orders-api wrote it to Elasticsearch. (`curl http://localhost:9200/orders/_count` from a terminal works too, without opening Kibana at all.)
+
+**Browsing in Discover (nicer UI, one-time setup):** Discover needs a data view pointing at the index first:
+
+1. **Management → Stack Management → Data Views** (under the "Kibana" group) — create one matching the `orders` index (pattern `orders*`, matching `ELASTICSEARCH_ORDERS_INDEX` in `orders-api/.env`), using `createdAt` (see `orders-api/elasticsearch/orders-mapping.json`) as the time field.
+2. **Analytics → Discover** — select that data view to browse the same orders in a searchable/filterable table.
 
 ## Stopping
 
